@@ -57,6 +57,32 @@ pub unsafe fn set_stream(
     sys::cublasSetStream_v2(handle, stream).result()
 }
 
+#[allow(clippy::too_many_arguments)]
+pub unsafe fn saxpy(
+    handle: sys::cublasHandle_t,
+    n: c_int,
+    alpha: *const f32,
+    x: *const f32,
+    incx: c_int,
+    y: *mut f32,
+    incy: c_int,
+) -> Result<(), CublasError> {
+    sys::cublasSaxpy_v2(handle, n, alpha, x, incx, y, incy).result()
+}
+
+#[allow(clippy::too_many_arguments)]
+pub unsafe fn daxpy(
+    handle: sys::cublasHandle_t,
+    n: c_int,
+    alpha: *const f64,
+    x: *const f64,
+    incx: c_int,
+    y: *mut f64,
+    incy: c_int,
+) -> Result<(), CublasError> {
+    sys::cublasDaxpy_v2(handle, n, alpha, x, incx, y, incy).result()
+}
+
 /// Single precision matrix vector multiplication. See
 /// [nvidia docs](https://docs.nvidia.com/cuda/cublas/index.html#cublas-t-gemv)
 ///
