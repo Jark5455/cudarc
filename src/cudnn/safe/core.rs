@@ -14,9 +14,6 @@ pub struct Cudnn {
     pub(crate) device: Arc<CudaDevice>,
 }
 
-unsafe impl Send for Cudnn {}
-unsafe impl Sync for Cudnn {}
-
 impl Cudnn {
     /// Creates a new cudnn handle and sets the stream to the `device`'s stream.
     pub fn new(device: Arc<CudaDevice>) -> Result<Arc<Self>, CudnnError> {
