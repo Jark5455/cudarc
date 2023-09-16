@@ -108,6 +108,15 @@ pub struct TensorDescriptor<T> {
     pub(crate) marker: PhantomData<T>,
 }
 
+#[derive(Debug)]
+pub struct ActivationDescriptor {
+    pub(crate) desc: sys::cudnnActivationDescriptor_t,
+    pub(crate) mode: sys::cudnnActivationMode_t,
+
+    #[allow(unused)]
+    pub(crate) handle: Arc<Cudnn>,
+}
+
 impl Cudnn {
     /// Creates a 4d tensor descriptor.
     pub fn create_4d_tensor<T: CudnnDataType>(
@@ -166,6 +175,29 @@ impl Cudnn {
         }?;
         Ok(desc)
     }
+
+    pub fn create_activation_descriptor(
+        self: &Arc<Cudnn>,
+        mode: sys::cudnnActivationMode_t,
+        coef: f64,
+        relu_nan_opt: sys::cudnnNanPropagation_t,
+        swish_beta: Option<f64>
+    ) -> Result<ActivationDescriptor, CudnnError> {
+        let desc = result::create_activation_descriptor()?;
+        let desc = ActivationDescriptor {
+            desc,
+            mode,
+            handle: self.clone(),
+        };
+
+        result::set_activation_descriptor(desc.desc, desc.mode, relu_nan_opt.unwrap(), coef)?;
+
+        if swish_beta.is_some() {
+            result::set_activation_descriptor_swish_beta(desc.desc, swish_beta.unwrap())?;
+        }
+
+        Ok(desc)
+    }
 }
 
 impl<T> Drop for TensorDescriptor<T> {
@@ -173,6 +205,15 @@ impl<T> Drop for TensorDescriptor<T> {
         let desc = std::mem::replace(&mut self.desc, std::ptr::null_mut());
         if !desc.is_null() {
             unsafe { result::destroy_tensor_descriptor(desc) }.unwrap()
+        }
+    }
+}
+
+impl Drop for ActivationDescriptor {
+    fn drop(&mut self) {
+        let desc = std::mem::replace(&mut self.desc, std::ptr::null_mut());
+        if !desc.is_null() {
+            unsafe { result::destroy_activation_descriptor(desc) }.unwrap()
         }
     }
 }
