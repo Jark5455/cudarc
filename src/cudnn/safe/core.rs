@@ -190,7 +190,7 @@ impl Cudnn {
             handle: self.clone(),
         };
 
-        result::set_activation_descriptor(desc.desc, desc.mode, relu_nan_opt.unwrap(), coef)?;
+        result::set_activation_descriptor(desc.desc, desc.mode, relu_nan_opt, coef)?;
 
         if swish_beta.is_some() {
             result::set_activation_descriptor_swish_beta(desc.desc, swish_beta.unwrap())?;
