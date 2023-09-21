@@ -211,21 +211,23 @@ pub fn set_activation_descriptor(
     desc: sys::cudnnActivationDescriptor_t,
     mode: sys::cudnnActivationMode_t,
     relu_nan_opt: sys::cudnnNanPropagation_t,
-    coef: f64
+    coef: f64,
 ) -> Result<(), CudnnError> {
     unsafe { sys::cudnnSetActivationDescriptor(desc, mode, relu_nan_opt, coef).result() }
 }
 
 pub fn set_activation_descriptor_swish_beta(
     desc: sys::cudnnActivationDescriptor_t,
-    beta: f64
+    beta: f64,
 ) -> Result<(), CudnnError> {
     unsafe { sys::cudnnSetActivationDescriptorSwishBeta(desc, beta).result() }
 }
 
 pub unsafe fn destroy_activation_descriptor(
-    desc: sys::cudnnActivationDescriptor_t
-) -> Result<(), CudnnError> { sys::cudnnDestroyActivationDescriptor(desc).result() }
+    desc: sys::cudnnActivationDescriptor_t,
+) -> Result<(), CudnnError> {
+    sys::cudnnDestroyActivationDescriptor(desc).result()
+}
 
 /// Allocates a convolution descriptor. See [nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/api/index.html#cudnnCreateConvolutionDescriptor).
 pub fn create_convolution_descriptor() -> Result<sys::cudnnConvolutionDescriptor_t, CudnnError> {

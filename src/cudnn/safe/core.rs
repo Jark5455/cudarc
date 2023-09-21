@@ -181,7 +181,7 @@ impl Cudnn {
         mode: sys::cudnnActivationMode_t,
         coef: f64,
         relu_nan_opt: sys::cudnnNanPropagation_t,
-        swish_beta: Option<f64>
+        swish_beta: Option<f64>,
     ) -> Result<ActivationDescriptor, CudnnError> {
         let desc = result::create_activation_descriptor()?;
         let desc = ActivationDescriptor {

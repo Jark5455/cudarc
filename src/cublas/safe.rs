@@ -66,7 +66,7 @@ pub struct AxpyConfig<T> {
     pub alpha: T,
     pub n: c_int,
     pub incx: c_int,
-    pub incy: c_int
+    pub incy: c_int,
 }
 
 pub trait Axpy<T> {
@@ -92,7 +92,7 @@ impl Axpy<f32> for CudaBlas {
             *x.device_ptr() as *const _,
             cfg.incx,
             *y.device_ptr() as *mut _,
-            cfg.incy
+            cfg.incy,
         )
     }
 }
@@ -111,7 +111,7 @@ impl Axpy<f64> for CudaBlas {
             *x.device_ptr() as *const _,
             cfg.incx,
             *y.device_ptr() as *mut _,
-            cfg.incy
+            cfg.incy,
         )
     }
 }
